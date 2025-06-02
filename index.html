@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Studio - Premium AI Assistant</title>
+    
+    <!-- External Dependencies -->
+    <script src="https://js.puter.com/v2/"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <svg class="brand-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L13.09 8.26L19 7L14.74 12L19 17L13.09 15.74L12 22L10.91 15.74L5 17L9.26 12L5 7L10.91 8.26L12 2Z"/>
+                    </svg>
+                    <span class="brand-text">AI Studio</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Model Selection -->
+                <div class="control-section">
+                    <h3 class="section-title">
+                        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        AI Model
+                    </h3>
+                    <div class="model-selector">
+                        <select id="model-select" class="select-premium">
+                            <optgroup label="🧠 Reasoning Models">
+                                <option value="o4-mini">O4 Mini (Reasoning)</option>
+                                <option value="o3-mini">O3 Mini (Reasoning)</option>
+                                <option value="o3">O3 (Reasoning)</option>
+                                <option value="o1-pro">O1 Pro (Reasoning)</option>
+                                <option value="o1-mini">O1 Mini (Reasoning)</option>
+                                <option value="o1">O1 (Reasoning)</option>
+                                <option value="deepseek-reasoner">DeepSeek Reasoner</option>
+                            </optgroup>
+                            <optgroup label="⚡ OpenAI GPT Models">
+                                <option value="gpt-4o" selected>GPT-4o</option>
+                                <option value="gpt-4o-mini">GPT-4o Mini</option>
+                                <option value="gpt-4.5-preview">GPT-4.5 Preview</option>
+                                <option value="gpt-4.1">GPT-4.1</option>
+                                <option value="gpt-4.1-mini">GPT-4.1 Mini</option>
+                                <option value="gpt-4.1-nano">GPT-4.1 Nano</option>
+                            </optgroup>
+                            <optgroup label="🎭 Claude Models">
+                                <option value="claude-opus-4">Claude Opus 4</option>
+                                <option value="claude-sonnet-4">Claude Sonnet 4</option>
+                                <option value="claude-3-7-sonnet">Claude 3.7 Sonnet</option>
+                                <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                            </optgroup>
+                            <optgroup label="💎 Google Gemini">
+                                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                                <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                                <option value="google/gemma-2-27b-it">Gemma 2 27B</option>
+                            </optgroup>
+                            <optgroup label="🦙 Meta Llama">
+                                <option value="meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo">Llama 3.1 405B</option>
+                                <option value="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo">Llama 3.1 70B</option>
+                                <option value="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo">Llama 3.1 8B</option>
+                            </optgroup>
+                            <optgroup label="🌟 Mistral">
+                                <option value="mistral-large-latest">Mistral Large</option>
+                                <option value="pixtral-large-latest">Pixtral Large</option>
+                                <option value="codestral-latest">Codestral</option>
+                            </optgroup>
+                            <optgroup label="🚀 Other Models">
+                                <option value="deepseek-chat">DeepSeek Chat</option>
+                                <option value="grok-beta">Grok Beta (xAI)</option>
+                            </optgroup>
+                        </select>
+                        <div class="model-info" id="model-info">
+                            <div class="model-badge" id="model-badge">Standard</div>
+                            <div class="model-description" id="model-description">
+                                Advanced multimodal AI model with superior performance
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reasoning Controls -->
+                <div class="control-section" id="reasoning-section" style="display: none;">
+                    <h3 class="section-title">
+                        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z"/>
+                        </svg>
+                        Reasoning
+                    </h3>
+                    <div class="reasoning-controls">
+                        <div class="toggle-group">
+                            <input type="checkbox" id="reasoning-mode" class="toggle-input">
+                            <label for="reasoning-mode" class="toggle-label">
+                                <span class="toggle-switch"></span>
+                                <span class="toggle-text">Enable Step-by-Step Reasoning</span>
+                            </label>
+                        </div>
+                        <div class="effort-selector">
+                            <label class="input-label">Reasoning Effort</label>
+                            <select id="reasoning-effort" class="select-premium">
+                                <option value="low">⚡ Low (Fast)</option>
+                                <option value="medium" selected>⚖️ Medium (Balanced)</option>
+                                <option value="high">🎯 High (Thorough)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Generation -->
+                <div class="control-section">
+                    <h3 class="section-title">
+                        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.5L14.5 12L19 18H5L8.5 13.5Z"/>
+                        </svg>
+                        Image Generation
+                    </h3>
+                    <div class="image-generation-controls">
+                        <div class="toggle-group">
+                            <input type="checkbox" id="dalle-mode" class="toggle-input">
+                            <label for="dalle-mode" class="toggle-label">
+                                <span class="toggle-switch"></span>
+                                <span class="toggle-text">Enable DALL-E 3</span>
+                            </label>
+                        </div>
+                        <div class="image-options" id="image-options" style="display: none;">
+                            <div class="option-group">
+                                <label class="input-label">Image Size</label>
+                                <select id="image-size" class="select-premium">
+                                    <option value="1024x1024">Square (1024x1024)</option>
+                                    <option value="1792x1024">Wide (1792x1024)</option>
+                                    <option value="1024x1792">Tall (1024x1792)</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label class="input-label">Quality</label>
+                                <select id="image-quality" class="select-premium">
+                                    <option value="standard">Standard</option>
+                                    <option value="hd">HD</option>
+                                </select>
+                            </div>
+                            <div class="option-group">
+                                <label class="input-label">Style</label>
+                                <select id="image-style" class="select-premium">
+                                    <option value="vivid">Vivid</option>
+                                    <option value="natural">Natural</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="control-section">
+                    <h3 class="section-title">
+                        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        File Analysis
+                    </h3>
+                    <div class="file-upload-container">
+                        <div class="file-upload-area" id="file-upload-area">
+                            <input type="file" id="file-input" class="file-input" accept=".txt,.md,.json,.csv,.pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp">
+                            <div class="upload-content" id="upload-content">
+                                <svg class="upload-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16V10H5L12 3L19 10H15V16H9ZM5 20V18H19V20H5Z"/>
+                                </svg>
+                                <div class="upload-text">
+                                    <strong>Drop files here</strong> or click to browse
+                                </div>
+                                <div class="upload-formats">
+                                    Supports: Images, PDFs, Documents, Text files
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-preview" id="file-preview" style="display: none;">
+                            <div class="file-item">
+                                <svg class="file-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M13 9V3.5L18.5 9M6 2C4.89 2 4 2.89 4 4V20A2 2 0 0 0 6 22H18A2 2 0 0 0 20 20V8L14 2H6Z"/>
+                                </svg>
+                                <div class="file-details">
+                                    <div class="file-name" id="file-name"></div>
+                                    <div class="file-size" id="file-size"></div>
+                                </div>
+                                <button class="remove-file-btn" id="remove-file-btn">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="control-section">
+                    <h3 class="section-title">
+                        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 8L10.67 8.09C10.26 7.22 9.46 6.54 8.5 6.24L9 5L8 4L6.5 6.5C5.58 6.83 4.81 7.5 4.31 8.38L3 7L2 8L4.5 9.5C4.19 10.42 4.19 11.58 4.5 12.5L2 14L3 15L4.31 13.62C4.81 14.5 5.58 15.17 6.5 15.5L8 18L9 17L8.5 15.76C9.46 15.46 10.26 14.78 10.67 13.91L12 14L14 12L12 8Z"/>
+                        </svg>
+                        Quick Actions
+                    </h3>
+                    <div class="quick-actions">
+                        <button class="action-btn" id="clear-chat-btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z"/>
+                            </svg>
+                            Clear Chat
+                        </button>
+                        <button class="action-btn" id="export-chat-btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z"/>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="action-btn" id="settings-btn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5A3.5 3.5 0 0 1 15.5 12A3.5 3.5 0 0 1 12 15.5M19.43 12.98C19.47 12.66 19.5 12.34 19.5 12C19.5 11.66 19.47 11.34 19.43 11.02L21.54 9.37C21.73 9.22 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.05 19.27 4.96 19.05 5.05L16.56 6.05C16.04 5.65 15.48 5.32 14.87 5.07L14.49 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.51 2.42L9.13 5.07C8.52 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.73 4.96 4.46 5.05 4.34 5.27L2.34 8.73C2.22 8.95 2.27 9.22 2.46 9.37L4.57 11.02C4.53 11.34 4.5 11.67 4.5 12C4.5 12.33 4.53 12.66 4.57 12.98L2.46 14.63C2.27 14.78 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.95 4.73 19.03 4.95 18.95L7.44 17.94C7.96 18.34 8.52 18.68 9.13 18.93L9.51 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.49 21.58L14.87 18.93C15.48 18.68 16.04 18.34 16.56 17.94L19.05 18.95C19.27 19.03 19.54 18.95 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.98Z"/>
+                            </svg>
+                            Settings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Documentation Links -->
+                <div class="control-section">
+                    <h3 class="section-title">
+                        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17 12H16L14 9V7H10V9L8 12H7L10 16H14L17 12Z"/>
+                        </svg>
+                        Documentation
+                    </h3>
+                    <div class="doc-links">
+                        <a href="https://developer.puter.com/tutorials/free-unlimited-openai-api/" target="_blank" class="doc-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14 3V5H17.59L7.76 14.83L9.17 16.24L19 6.41V10H21V3M19 19H5V5H12V3H5C3.89 3 3 3.9 3 5V19A2 2 0 0 0 5 21H19A2 2 0 0 0 21 19V12H19V19Z"/>
+                            </svg>
+                            OpenAI API Guide
+                        </a>
+                        <a href="https://docs.puter.com/AI/chat/" target="_blank" class="doc-link">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M14 3V5H17.59L7.76 14.83L9.17 16.24L19 6.41V10H21V3M19 19H5V5H12V3H5C3.89 3 3 3.9 3 5V19A2 2 0 0 0 5 21H19A2 2 0 0 0 21 19V12H19V19Z"/>
+                            </svg>
+                            Puter.js Docs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="chat-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z"/>
+                        </svg>
+                    </button>
+                    <div class="header-info">
+                        <h1 class="chat-title">AI Chat Studio</h1>
+                        <div class="model-status" id="model-status">GPT-4o • Ready</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status" id="connection-status">
+                        <div class="status-indicator connected"></div>
+                        <span>Connected</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Chat Container -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="welcome-screen">
+                        <div class="welcome-content">
+                            <div class="welcome-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L13.09 8.26L19 7L14.74 12L19 17L13.09 15.74L12 22L10.91 15.74L5 17L9.26 12L5 7L10.91 8.26L12 2Z"/>
+                                </svg>
+                            </div>
+                            <h2>Welcome to AI Chat Studio</h2>
+                            <p>Experience the power of premium AI models with advanced features including:</p>
+                            <div class="feature-grid">
+                                <div class="feature-item">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M9 12L11 14L15 10M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12Z"/>
+                                    </svg>
+                                    <span>Step-by-step reasoning</span>
+                                </div>
+                                <div class="feature-item">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.5L14.5 12L19 18H5L8.5 13.5Z"/>
+                                    </svg>
+                                    <span>Image generation & analysis</span>
+                                </div>
+                                <div class="feature-item">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z"/>
+                                    </svg>
+                                    <span>Document analysis</span>
+                                </div>
+                                <div class="feature-item">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 8L10.67 8.09C10.26 7.22 9.46 6.54 8.5 6.24L9 5L8 4L6.5 6.5C5.58 6.83 4.81 7.5 4.31 8.38L3 7L2 8L4.5 9.5C4.19 10.42 4.19 11.58 4.5 12.5L2 14L3 15L4.31 13.62C4.81 14.5 5.58 15.17 6.5 15.5L8 18L9 17L8.5 15.76C9.46 15.46 10.26 14.78 10.67 13.91L12 14L14 12L12 8Z"/>
+                                    </svg>
+                                    <span>LaTeX math rendering</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-area">
+                    <div class="input-container">
+                        <form id="chat-form" class="chat-form">
+                            <div class="input-wrapper">
+                                <div class="input-tools">
+                                    <button type="button" class="tool-btn" id="latex-btn" title="Insert LaTeX">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 8L10.67 8.09C10.26 7.22 9.46 6.54 8.5 6.24L9 5L8 4L6.5 6.5C5.58 6.83 4.81 7.5 4.31 8.38L3 7L2 8L4.5 9.5C4.19 10.42 4.19 11.58 4.5 12.5L2 14L3 15L4.31 13.62C4.81 14.5 5.58 15.17 6.5 15.5L8 18L9 17L8.5 15.76C9.46 15.46 10.26 14.78 10.67 13.91L12 14L14 12L12 8Z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="tool-btn" id="image-btn" title="Generate Image">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.5L14.5 12L19 18H5L8.5 13.5Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <textarea 
+                                    id="chat-input" 
+                                    class="chat-input" 
+                                    placeholder="Type your message... Use $$ for LaTeX math equations"
+                                    rows="1"
+                                ></textarea>
+                                <button type="submit" class="send-btn" id="send-btn" disabled>
+                                    <svg class="send-icon" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                        <div class="input-status">
+                            <div class="status-left">
+                                <span class="token-count" id="token-count">0 tokens</span>
+                                <span class="model-indicator" id="model-indicator">GPT-4o</span>
+                            </div>
+                            <div class="status-right">
+                                <span class="help-text">Press Shift+Enter for new line • Use $$ for math</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Settings</h3>
+                    <button class="modal-close" id="modal-close">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-section">
+                        <h4>Chat Preferences</h4>
+                        <div class="setting-item">
+                            <label class="setting-label">Max History Messages</label>
+                            <input type="number" id="max-history" class="setting-input" value="20" min="5" max="100">
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">Auto-scroll</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" id="auto-scroll" class="toggle-input" checked>
+                                <label for="auto-scroll" class="toggle-label">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">Stream Responses</label>
+                            <div class="toggle-group">
+                                <input type="checkbox" id="stream-responses" class="toggle-input" checked>
+                                <label for="stream-responses" class="toggle-label">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section">
+                        <h4>Display Options</h4>
+                        <div class="setting-item">
+                            <label class="setting-label">Theme</label>
+                            <select id="theme-select" class="setting-input">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                                <option value="auto">Auto</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">Font Size</label>
+                            <select id="font-size" class="setting-input">
+                                <option value="small">Small</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LaTeX Modal -->
+        <div class="modal" id="latex-modal">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>LaTeX Math Input</h3>
+                    <button class="modal-close" id="latex-modal-close">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="latex-input-section">
+                        <label class="setting-label">LaTeX Expression</label>
+                        <textarea id="latex-input" class="latex-textarea" placeholder="Enter LaTeX expression... e.g., x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}"></textarea>
+                    </div>
+                    <div class="latex-preview">
+                        <label class="setting-label">Preview</label>
+                        <div id="latex-preview" class="latex-preview-content"></div>
+                    </div>
+                    <div class="latex-examples">
+                        <label class="setting-label">Quick Examples</label>
+                        <div class="example-grid">
+                            <button class="example-btn" data-latex="\frac{a}{b}">Fraction</button>
+                            <button class="example-btn" data-latex="x^2 + y^2 = r^2">Superscript</button>
+                            <button class="example-btn" data-latex="\sqrt{x}">Square Root</button>
+                            <button class="example-btn" data-latex="\sum_{i=1}^{n} x_i">Summation</button>
+                            <button class="example-btn" data-latex="\int_{a}^{b} f(x) dx">Integral</button>
+                            <button class="example-btn" data-latex="\alpha \beta \gamma">Greek Letters</button>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-secondary" id="latex-cancel">Cancel</button>
+                        <button class="btn-primary" id="latex-insert">Insert</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Processing...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/models.js"></script>
+    <script src="js/latex.js"></script>
+    <script src="js/file-handler.js"></script>
+    <script src="js/image-generator.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
